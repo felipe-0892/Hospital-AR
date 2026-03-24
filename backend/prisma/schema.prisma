@@ -1,0 +1,362 @@
+// ============================================================
+// SISTEMA HOSPITALAR — PRONTUÁRIO ELETRÔNICO
+// Prisma + PostgreSQL
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Genero {
+  MASCULINO
+  FEMININO
+  OUTRO
+}
+
+enum TipoSanguineo {
+  A_POSITIVO
+  A_NEGATIVO
+  B_POSITIVO
+  B_NEGATIVO
+  AB_POSITIVO
+  AB_NEGATIVO
+  O_POSITIVO
+  O_NEGATIVO
+}
+
+enum StatusConsulta {
+  AGENDADA
+  CONFIRMADA
+  EM_ATENDIMENTO
+  FINALIZADA
+  CANCELADA
+  NAO_COMPARECEU
+}
+
+enum TipoConsulta {
+  CONSULTA
+  RETORNO
+  EMERGENCIA
+}
+
+enum TipoExame {
+  SANGUE
+  URINA
+  RAIO_X
+  TOMOGRAFIA
+  ULTRASSOM
+  RESSONANCIA
+}
+
+enum StatusInternacao {
+  ATIVA
+  ALTA
+}
+
+enum TipoUsuario {
+  ADMIN
+  MEDICO
+  ENFERMEIRO
+  RECEPCIONISTA
+}
+
+enum StatusLeito {
+  LIVRE
+  OCUPADO
+  MANUTENCAO
+}
+
+///////////////////////////////////////////////////////////////
+// USUÁRIOS DO SISTEMA
+///////////////////////////////////////////////////////////////
+
+model Usuario {
+  id String @id @default(uuid())
+
+  nome  String
+  email String @unique
+  senha String
+
+  tipo TipoUsuario
+
+  criadoEm DateTime @default(now())
+
+  @@map("usuarios")
+}
+
+///////////////////////////////////////////////////////////////
+// PACIENTES
+///////////////////////////////////////////////////////////////
+
+model Paciente {
+  id String @id @default(uuid())
+
+  nomeCompleto   String
+  cpf            String   @unique
+  dataNascimento DateTime
+
+  genero        Genero
+  tipoSanguineo TipoSanguineo?
+
+  telefone String
+  email    String?
+  endereco String?
+
+  consultas  Consulta[]
+  prontuario Prontuario?
+
+  triagens    Triagem[]
+  exames      Exame[]
+  receitas    Receita[]
+  internacoes Internacao[]
+
+  medicamentos HistoricoMedicamento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pacientes")
+}
+
+///////////////////////////////////////////////////////////////
+// ESPECIALIDADES
+///////////////////////////////////////////////////////////////
+
+model Especialidade {
+  id   String @id @default(uuid())
+  nome String @unique
+
+  medicos Medico[]
+
+  @@map("especialidades")
+}
+
+///////////////////////////////////////////////////////////////
+// MÉDICOS
+///////////////////////////////////////////////////////////////
+
+model Medico {
+  id String @id @default(uuid())
+
+  nomeCompleto String
+  crm          String @unique
+
+  especialidadeId String
+  telefone        String
+  email           String
+
+  ativo Boolean @default(true)
+
+  especialidade Especialidade @relation(fields: [especialidadeId], references: [id])
+
+  consultas Consulta[]
+
+  createdAt   DateTime     @default(now())
+  exames      Exame[]
+  receitas    Receita[]
+  internacaos Internacao[]
+
+  @@map("medicos")
+}
+
+///////////////////////////////////////////////////////////////
+// CONSULTAS
+///////////////////////////////////////////////////////////////
+
+model Consulta {
+  id String @id @default(uuid())
+
+  pacienteId String
+  medicoId   String
+
+  dataAgendada DateTime
+
+  tipo   TipoConsulta
+  status StatusConsulta
+
+  motivo String?
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+  medico   Medico   @relation(fields: [medicoId], references: [id])
+
+  evolucao EvolucaoMedica?
+
+  exames   Exame[]
+  receitas Receita[]
+
+  createdAt DateTime @default(now())
+
+  @@map("consultas")
+}
+
+///////////////////////////////////////////////////////////////
+// PRONTUÁRIO
+///////////////////////////////////////////////////////////////
+
+model Prontuario {
+  id         String @id @default(uuid())
+  pacienteId String @unique
+
+  alergias    String?
+  observacoes String?
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+
+  evolucoes EvolucaoMedica[]
+
+  @@map("prontuarios")
+}
+
+///////////////////////////////////////////////////////////////
+// EVOLUÇÃO MÉDICA
+///////////////////////////////////////////////////////////////
+
+model EvolucaoMedica {
+  id String @id @default(uuid())
+
+  prontuarioId String
+  consultaId   String @unique
+
+  anamnese    String?
+  diagnostico String?
+
+  prontuario Prontuario @relation(fields: [prontuarioId], references: [id])
+  consulta   Consulta   @relation(fields: [consultaId], references: [id])
+
+  @@map("evolucoes_medicas")
+}
+
+///////////////////////////////////////////////////////////////
+// TRIAGEM
+///////////////////////////////////////////////////////////////
+
+model Triagem {
+  id String @id @default(uuid())
+
+  pacienteId String
+
+  temperatura Float?
+  pressao     String?
+  saturacao   Float?
+
+  sintomas String?
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("triagens")
+}
+
+///////////////////////////////////////////////////////////////
+// EXAMES
+///////////////////////////////////////////////////////////////
+
+model Exame {
+  id String @id @default(uuid())
+
+  pacienteId String
+  medicoId   String
+  consultaId String?
+
+  tipo      TipoExame
+  descricao String?
+
+  resultado String?
+
+  paciente Paciente  @relation(fields: [pacienteId], references: [id])
+  medico   Medico    @relation(fields: [medicoId], references: [id])
+  consulta Consulta? @relation(fields: [consultaId], references: [id])
+
+  @@map("exames")
+}
+
+///////////////////////////////////////////////////////////////
+// RECEITAS
+///////////////////////////////////////////////////////////////
+
+model Receita {
+  id String @id @default(uuid())
+
+  pacienteId String
+  medicoId   String
+  consultaId String?
+
+  medicamento String
+  dosagem     String
+
+  paciente Paciente  @relation(fields: [pacienteId], references: [id])
+  medico   Medico    @relation(fields: [medicoId], references: [id])
+  consulta Consulta? @relation(fields: [consultaId], references: [id])
+
+  historico HistoricoMedicamento[]
+
+  @@map("receitas")
+}
+
+///////////////////////////////////////////////////////////////
+// HISTÓRICO DE MEDICAMENTOS
+///////////////////////////////////////////////////////////////
+
+model HistoricoMedicamento {
+  id String @id @default(uuid())
+
+  pacienteId String
+  receitaId  String
+
+  dataInicio DateTime
+  dataFim    DateTime?
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+  receita  Receita  @relation(fields: [receitaId], references: [id])
+
+  @@map("historico_medicamentos")
+}
+
+///////////////////////////////////////////////////////////////
+// LEITOS
+///////////////////////////////////////////////////////////////
+
+model Leito {
+  id String @id @default(uuid())
+
+  numero String
+  setor  String
+
+  status      StatusLeito  @default(LIVRE)
+  internacaos Internacao[]
+
+  @@map("leitos")
+}
+
+///////////////////////////////////////////////////////////////
+// INTERNAÇÕES
+///////////////////////////////////////////////////////////////
+
+model Internacao {
+  id String @id @default(uuid())
+
+  pacienteId String
+  medicoId   String
+  leitoId    String?
+
+  motivo String
+
+  status      StatusInternacao
+  dataEntrada DateTime
+  dataAlta    DateTime?
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+  medico   Medico   @relation(fields: [medicoId], references: [id])
+  leito    Leito?   @relation(fields: [leitoId], references: [id])
+
+  @@map("internacoes")
+}
