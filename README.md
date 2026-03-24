@@ -140,7 +140,7 @@ http://localhost:5050
 - Prisma configurado
 - Modelagem completa do banco
 - API inicial funcionando
-### 🟡 Sprint 02 — CRUD Base
+### 🟢 Sprint 02 — CRUD Base
 - Pacientes
 - Médicos
 - Especialidades
