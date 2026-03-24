@@ -157,12 +157,12 @@ model Medico {
 
   especialidade Especialidade @relation(fields: [especialidadeId], references: [id])
 
-  consultas Consulta[]
-
-  createdAt   DateTime     @default(now())
+  consultas   Consulta[]
   exames      Exame[]
   receitas    Receita[]
-  internacaos Internacao[]
+  internacoes Internacao[]
+
+  createdAt DateTime @default(now())
 
   @@map("medicos")
 }
@@ -332,7 +332,7 @@ model Leito {
   setor  String
 
   status      StatusLeito  @default(LIVRE)
-  internacaos Internacao[]
+  internacoes Internacao[]
 
   @@map("leitos")
 }
