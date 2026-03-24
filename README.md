@@ -134,44 +134,33 @@ http://localhost:5050
 ## 📅 Roadmap (Sprints)
 ## 
 ### 🟢 Sprint 01 — Setup Inicial ✅
-- Estrutura do projeto
-- Configuração do ambiente
-- Docker + PostgreSQL
-- Prisma configurado
-- Modelagem completa do banco
-- API inicial funcionando
-### 🟢 Sprint 02 — CRUD Base
-- Pacientes
-- Médicos
-- Especialidades
-### 🟡 Sprint 03 — Consultas
-- Agendamentos
-- Status
-- Regras de negócio
-### 🟡 Sprint 04 — Prontuário
-- Evolução médica
-- Histórico clínico
-### 🟡 Sprint 05 — Módulos Clínicos
-- Exames
-- Receitas
-- Triagem
-- Enfermagem
-### 🟡 Sprint 06 — Internação
-- Controle de leitos
-- Internações
-- Alta hospitalar
-### 🟡 Sprint 07 — Segurança
-- Autenticação JWT
-- Controle de acesso
-- Perfis de usuário
-### 🟡 Sprint 08 — Finalização
-- Documentação Swagger
-- Refatoração
-- Deploy
+- ✔ Estrutura do projeto
+- ✔ Configuração do ambiente
+- ✔ Docker + PostgreSQL
+- ✔ Prisma configurado
+- ✔ Modelagem completa do banco
+- ✔ API inicial funcionando
+### 🟢 Sprint 02 — Backend + Infraestrutura + Configurações + Problemas enfrentados
+- ✔ Ambiente configurado
+- ✔ Banco funcionando
+- ✔ Prisma integrado
+- ✔ Docker rodando
+- ✔ API funcional
+- ✔ Swagger implementado
+### 🟡 Sprint 03 — Validação de Dados
+- 🔐 Autenticação JWT no Swagger
+- 📦 DTO com validação (Zod ou class-validator)
+- 📊 Respostas padronizadas (success/error)
+- 📁 Separação por versão (/v1)
+### 🟡 Sprint 04 — 
+### 🟡 Sprint 05 — 
+### 🟡 Sprint 06 — 
+### 🟡 Sprint 07 — 
+### 🟡 Sprint 08 — 
 
 ## 📌 Status do Projeto
 
-### 🚧 Em desenvolvimento — Sprint 01 concluída
+### 🚧 Em desenvolvimento — Sprint 01 e 02 concluídas
 
 ## 🎯 Objetivo
 
