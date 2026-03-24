@@ -1,28 +1,28 @@
 {
-  "name": "backend",
+  "name": "hospital-ar-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Backend do Sistema Hospitalar Hospital-AR",
+  "main": "src/app.ts",
   "scripts": {
-  "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-  "build": "tsc",
-  "start": "node dist/app.js",
-  "prisma": "prisma"
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "@prisma/client": "^7.5.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1"
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.5.0",
-    "prisma": "^7.5.0",
+    "@types/express": "^4.17.0",
+    "@types/node": "^20.0.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "prisma": "^7.0.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.0.0"
   }
 }
